@@ -1,0 +1,9 @@
+{
+    "object":"list",
+    "total_cards":240,
+    "has_more":true,
+    "next_page":"https://api.scryfall.com/cards/search?format=json&include_extras=true&include_multilingual=false&include_variations=true&order=set&page=2&q=e%3Admc&unique=prints",
+    "data": 
+    -[0 - 100]
+    -[100 - 175]
+}

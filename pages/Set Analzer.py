@@ -29,11 +29,11 @@ def imageView(response, color, card_type, enlarge):
 def SetAnalyzer():
     baseUrl = "https://api.scryfall.com"
     typesOfSets = ("Commander", "Expansion", "Masters", "Alchemy", "Starters", "Core", "Arsenal", "Funny")
-    #col1, col2 = st.columns(2)
-    #with col1:
-    date = st.date_input("Sets made before... ", datetime.date.today())
-    #with col2:
-    selected_set_type = st.selectbox('Type of sets', typesOfSets)
+    col1, col2 = st.columns(2)
+    with col1:
+        date = st.date_input("Sets made before... ", datetime.date.today())
+    with col2:
+        selected_set_type = st.selectbox('Type of sets', typesOfSets)
     if(selected_set_type):
         search = ""
         search = st.text_input("Enter set name")
@@ -49,7 +49,7 @@ def SetAnalyzer():
             if(option != ""):
                 url = baseUrl + "/sets/" + results[option]
                 set_response = requests.get(url).json()
-                st.write(set_response)                                      #DEBUG LINE
+                #st.write(set_response)                                      #DEBUG LINE
                 st.divider()
                 
                 set_name = set_response['name']
@@ -60,7 +60,7 @@ def SetAnalyzer():
 
                 url = set_response['search_uri']
                 response = requests.get(url).json()
-                st.write(response)                                          #DEBUG LINE
+                #st.write(response)                                          #DEBUG LINE
     
                 tab1, tab2, tab3 = st.tabs(["Cards Images", "Card List", "Set Statistics"])
                 color = []
