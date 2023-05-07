@@ -8,5 +8,7 @@ Personal project.
   
 2. Open cmd and type:
   > powershell
+  
   > venv\Scripts\activate.ps1
+  
   > streamlit run MTGView.py
