@@ -7,6 +7,7 @@ Personal project.
   
   
 2. Open cmd
+
 3. Open powershell in cmd
 
   > powershell
