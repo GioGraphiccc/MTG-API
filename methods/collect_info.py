@@ -1,21 +1,12 @@
 import streamlit as st
 import datetime
 
-def getPrices(response):
-    data = response['data']
-    card_NamePrice = {}
-    for i in range(len(data)):
-        if(data[i]['prices']['usd'] == None):
-            if(data[i]['prices']['usd_foil']== None):
-                card_NamePrice.update({data[i]['name']:-1})
-            else:
-                card_NamePrice.update({data[i]['name']:float(data[i]['prices']['usd_foil'])})
-        else:
-            card_NamePrice.update({data[i]['name']:float(data[i]['prices']['usd'])})
-    return sorted(card_NamePrice.items(), key=lambda x:x[1])
 
-def getImages(dataset_1, color, card_type, enlarge):
-    dataset_1 = dataset_1['data']
+
+def getImages(response, color, card_type, enlarge):
+    
+    response = response['data']
+    #st.write(response)
     cardImages = []
     colorSortedImages = []
     cards_data = []
@@ -23,7 +14,8 @@ def getImages(dataset_1, color, card_type, enlarge):
     try:
         enlarge = True
         if(enlarge):
-            for data in dataset_1:
+            for data in response:
+                #st.write(data)
                 cards_data.append({'img_type_color':(data['image_uris']['large'], data['type_line'], data['colors'])})
             
             # for data in dataset_2:
@@ -31,7 +23,7 @@ def getImages(dataset_1, color, card_type, enlarge):
     except:
         st.error("Error: It appears that this set does not contain images.")
         return ['noimage']
-
+    #st.write(cards_data)
     if(len(color) != 0): #if color
         for i in range(len(cards_data)): #first, create colorSortedImages list with line types and color
             for col in cards_data[i]['img_type_color'][2]:
@@ -40,7 +32,7 @@ def getImages(dataset_1, color, card_type, enlarge):
                     colorSortedImages.append(cards_data[i])
 
         if(len(color) != 0 and len(card_type) == 0): #if color not type
-
+            
             return colorSortedImages
         
         else: #if color and type
@@ -51,6 +43,7 @@ def getImages(dataset_1, color, card_type, enlarge):
 
     else: #if not color
         if(len(card_type) == 0): #neither color or type
+            #st.write(cards_data)                #DEBUG LINE DEBUG
             return cards_data
         
         else: #if not color but type
@@ -58,7 +51,7 @@ def getImages(dataset_1, color, card_type, enlarge):
                 for i in range(len(cards_data)):
                     if(types in cards_data[i]['img_type_color'][1]):
                         cardImages.append(cards_data[i])
-
+    #st.write(cardImages)
     return cardImages
 
 def getInformation(response):

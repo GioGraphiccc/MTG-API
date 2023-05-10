@@ -2,29 +2,8 @@ import streamlit as st
 import datetime
 import requests
 
-from methods.display_info import displaySetCardImages, display_cards_info
-from methods.collect_info import getPrices, getImages, getInformation, SearchSets
-from methods.tools import formatWord, createChart
-
-
-def imageView(response, color, card_type, enlarge):
-    firstpage, secondpage = st.tabs(["1", "2"])
-    with firstpage:
-        cardImagesOfSet = getImages(response,color, card_type, enlarge)
-        if(displaySetCardImages(cardImagesOfSet) == 0):
-            st.error("Could not get images of cards for some reason.")
-    with secondpage:
-        try:
-            next_page = response['next_page']
-        except:
-            next_page = ""
-        if(next_page != ""):
-            response = requests.get(next_page).json()
-            cardImagesOfSet = getImages(response,color, card_type, enlarge)
-            if(displaySetCardImages(cardImagesOfSet) == 0):
-                st.error("Could not get images of cards for some reason.")
-        else:
-            st.error("No more cards from this set :(")
+from methods.collect_info import getInformation, SearchSets
+from methods.tools import formatWord, imageView, display_cards_info
 
 def SetAnalyzer():
     baseUrl = "https://api.scryfall.com"
@@ -110,51 +89,51 @@ def SetAnalyzer():
                         st.write("Release Date: " + release_date)
                         st.write("Number of Cards:  " + numCardsInSet)
                     
-                    with col2:
-                        set_2_name = ""
-                        displayData = True
-                        search_compare = ""
-                        search_compare = st.text_input("Compare prices with another set.")
-                        if(search_compare != ""):
-                            option_compare = ""
-                            url = baseUrl + "/sets"
-                            response = requests.get(url).json()
-                            results_compare = SearchSets(response, search_compare, selected_set_type, datetime.date.today())
-                            if results_compare:
-                                option_compare = st.selectbox('Results',results_compare, key=3)
-                            if(option_compare != ""):
-                                url = baseUrl + "/sets/" + results_compare[option_compare]
-                                set_response_compare = requests.get(url).json() #root set info
-                                set_2_name = set_response_compare['name']
-                                url = set_response_compare['search_uri']
-                                response_compare = requests.get(url).json() #card data from set
-                    if(st.button("Submit", key=4)):
-                        displayData = True
-                        if(set_2_name != ""):
-                            st.success("Comparing prices with " + set_2_name)
-                            set_2_info = getInformation(response_compare)
-                        else:
-                            st.success("Displaying Prices for " + set_1_name)
-                    tab1_area, tab2_line = st.tabs(["Area", "Line"])
-                    if(displayData):
-                        if(set_2_name != ""):
-                            with tab1_area:
-                                chart_data = createChart(set_1_info[17], set_1_name, set_2_info[17], set_2_name)
-                                st.area_chart(chart_data) 
-                            with tab2_line:
-                                chart_data = createChart(set_1_info[17], set_1_name, set_2_info[17], set_2_name)
-                                st.line_chart(chart_data)
-                            displayData = False
-                        else:
-                            with tab1_area:
-                                chart_data = createChart(set_1_info[17], set_1_name, [], "")
-                                st.area_chart(chart_data) 
-                            with tab2_line:
-                                chart_data = createChart(set_1_info[17], set_1_name, [], "")
-                                st.line_chart(chart_data)
-                            displayData = False
-                with tab2:
-                    st.dataframe(getPrices(originalResponse))
+                #     with col2:
+                #         set_2_name = ""
+                #         displayData = True
+                #         search_compare = ""
+                #         search_compare = st.text_input("Compare prices with another set.")
+                #         if(search_compare != ""):
+                #             option_compare = ""
+                #             url = baseUrl + "/sets"
+                #             response = requests.get(url).json()
+                #             results_compare = SearchSets(response, search_compare, selected_set_type, datetime.date.today())
+                #             if results_compare:
+                #                 option_compare = st.selectbox('Results',results_compare, key=3)
+                #             if(option_compare != ""):
+                #                 url = baseUrl + "/sets/" + results_compare[option_compare]
+                #                 set_response_compare = requests.get(url).json() #root set info
+                #                 set_2_name = set_response_compare['name']
+                #                 url = set_response_compare['search_uri']
+                #                 response_compare = requests.get(url).json() #card data from set
+                #     if(st.button("Submit", key=4)):
+                #         displayData = True
+                #         if(set_2_name != ""):
+                #             st.success("Comparing prices with " + set_2_name)
+                #             set_2_info = getInformation(response_compare)
+                #         else:
+                #             st.success("Displaying Prices for " + set_1_name)
+                #     tab1_area, tab2_line = st.tabs(["Area", "Line"])
+                #     if(displayData):
+                #         if(set_2_name != ""):
+                #             with tab1_area:
+                #                 chart_data = createChart(set_1_info[17], set_1_name, set_2_info[17], set_2_name)
+                #                 st.area_chart(chart_data) 
+                #             with tab2_line:
+                #                 chart_data = createChart(set_1_info[17], set_1_name, set_2_info[17], set_2_name)
+                #                 st.line_chart(chart_data)
+                #             displayData = False
+                #         else:
+                #             with tab1_area:
+                #                 chart_data = createChart(set_1_info[17], set_1_name, [], "")
+                #                 st.area_chart(chart_data) 
+                #             with tab2_line:
+                #                 chart_data = createChart(set_1_info[17], set_1_name, [], "")
+                #                 st.line_chart(chart_data)
+                #             displayData = False
+                # with tab2:
+                #     st.dataframe(getPrices(originalResponse))
 
 st.set_page_config(page_title="MTG Analyzer", page_icon=":shield:")
 st.title("MTG Card and Set Analyzer - Scryfall API")
