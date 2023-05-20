@@ -2,20 +2,18 @@
 Personal project.
  
  
- 1. Create virtual python env using:
-  > python -m venv venv
-  
-  
-2. Open cmd
+1. Open a command prompt in the same dir as MTGView.py and Create virtual python env using:
 
-3. Open powershell in cmd
+  > python -m venv venv
+
+2. Open powershell using:
 
   > powershell
 
-4. Activate the environment
+3. Activate the environment
 
   > venv\Scripts\activate.ps1
 
-5. run the file with streamlit. (If not downloaded then type 'pip install streamlit' first)
+4. run the file with streamlit. (If not downloaded then type 'pip install streamlit' first)
   
   > streamlit run MTGView.py
