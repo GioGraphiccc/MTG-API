@@ -1,0 +1,18 @@
+{
+    "object": "set",
+    "id": "78076b27-f888-4723-b27c-44074accd261",
+    "code": "dmc",
+    "tcgplayer_id": 3140,
+    "name": "Dominaria United Commander",
+    "uri": "https://api.scryfall.com/sets/78076b27-f888-4723-b27c-44074accd261",
+    "scryfall_uri": "https://scryfall.com/sets/dmc",
+    "search_uri": "https://api.scryfall.com/cards/search?include_extras=true&include_variations=true&order=set&q=e%3Admc&unique=prints",
+    "released_at": "2022-09-09",
+    "set_type": "commander",
+    "card_count": 240,
+    "parent_set_code": "dmu",
+    "digital": false,
+    "nonfoil_only": false,
+    "foil_only": false,
+    "icon_svg_uri": "https://svgs.scryfall.io/sets/dmc.svg?1682913600"
+  }
