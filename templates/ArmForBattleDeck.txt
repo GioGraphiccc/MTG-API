@@ -1,5 +1,5 @@
-1 Wyleth, Soul of Steel (cmr) 362
-1 Command Tower (cmr) 350
+1 Wyleth, Soul of Steel 
+1 Command Tower 
 1 Kor Cartographer (cmr) 30
 1 Myriad Landscape (cmr) 487
 1 Return to Dust (cmr) 43

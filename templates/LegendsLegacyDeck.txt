@@ -1,0 +1,87 @@
+1 Dihada, Binder of Wills (dmc) 1
+1 Caves of Koilos (dmu) 244
+1 Shanid, Sleepers' Scourge (dmc) 4
+1 Thrill of Possibility (dmc) 127
+1 Zeriam, Golden Wind (dmc) 5
+1 Cadric, Soul Kindler (dmc) 10
+1 Bladewing, Deathless Tyrant (dmc) 9
+1 Gerrard's Hourglass Pendant (dmc) 17
+1 Moira, Urborg Haunt (dmc) 6
+1 The Reaver Cleaver (dmc) 8
+1 The Peregrine Dynamo (dmc) 19
+1 Verrak, Warped Sengir (dmc) 16
+6 Plains (dmu) 262
+5 Swamp (dmu) 268
+5 Mountain (dmu) 271
+1 Captain Lannery Storm (dmc) 120
+1 Etali, Primal Storm (dmc) 121
+1 Alesha, Who Smiles at Death (dmc) 118
+1 Smoldering Marsh (dmc) 234
+1 Foreboding Ruins (dmc) 211
+1 Rakdos Carnarium (dmc) 226
+1 Bojuka Bog (dmc) 199
+1 Bedevil (dmc) 144
+1 Read the Bones (dmc) 117
+1 The Circle of Loyalty (dmc) 98
+1 Temple of Malice (dmc) 236
+1 Hazoret's Monument (dmc) 183
+1 Night's Whisper (dmc) 115
+1 Garna, the Bloodflame (dmc) 151
+1 Command Tower (dmc) 204
+1 Arcane Signet (dmc) 177
+1 Reliquary Tower (dmc) 227
+1 Evolving Wilds (dmc) 208
+1 Terramorphic Expanse (dmc) 239
+1 Heroes' Podium (dmc) 185
+1 Primevals' Glorious Rebirth (dmc) 165
+1 Fellwar Stone (dmc) 182
+1 Tajic, Blade of the Legion (dmc) 171
+1 Adriana, Captain of the Guard (dmc) 139
+1 Kari Zev, Skyship Raider (dmc) 123
+1 Urza's Ruinous Blast (dmc) 107
+1 Teshar, Ancestor's Apostle (dmc) 105
+1 Shizo, Death's Storehouse (dmc) 233
+1 Day of Destiny (dmc) 99
+1 Generous Gift (dmc) 100
+1 Sol Ring (dmc) 190
+1 Battlefield Forge (dmc) 198
+1 Tyrite Sanctum (dmc) 240
+1 Dragonskull Summit (dmc) 207
+1 Arvad the Cursed (dmc) 141
+1 Faithless Looting (dmc) 122
+1 Hedron Archive (dmc) 184
+1 Krenko, Tin Street Kingpin (dmc) 124
+1 Unbreakable Formation (dmc) 106
+1 Oketra's Monument (dmc) 188
+1 Drana, Liberator of Malakir (dmc) 111
+1 Wear // Tear (dmc) 174
+1 Blackblade Reforged (dmc) 178
+1 Ashling the Pilgrim (dmc) 119
+1 Nomad Outpost (dmc) 222
+1 Anafenza, Kin-Tree Spirit (dmc) 97
+1 Boros Garrison (dmc) 200
+1 Bontu's Monument (dmc) 179
+1 Kaya's Wrath (dmc) 155
+1 Ambition's Cost (dmc) 110
+1 Bell Borca, Spectral Sergeant (dmc) 145
+1 Commander's Sphere (dmc) 181
+1 Geier Reach Sanitarium (dmc) 213
+1 Hero's Downfall (dmc) 112
+1 Hero's Blade (dmc) 186
+1 Honor-Worn Shaku (dmc) 187
+1 Jazal Goldmane (dmc) 102
+1 Kothophed, Soul Hoarder (dmc) 114
+1 Josu Vess, Lich Knight (dmc) 113
+1 Mikokoro, Center of the Sea (dmc) 217
+1 Mobilized District (dmc) 218
+1 Mortify (dmc) 161
+1 Neheb, Dreadhorde Champion (dmc) 125
+1 Odric, Lunarch Marshal (dmc) 103
+1 Orzhov Basilica (dmc) 224
+1 Shivan Gorge (dmc) 232
+1 Sword of the Chosen (dmc) 192
+1 Temple of Triumph (dmc) 238
+1 Temple of Silence (dmc) 237
+1 Tenza, Godo's Maul (dmc) 193
+1 Traxos, Scourge of Kroog (dmc) 195
+1 Zetalpa, Primal Dawn (dmc) 108

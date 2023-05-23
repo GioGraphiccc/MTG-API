@@ -2,7 +2,7 @@ import streamlit as st
 import datetime
 import requests
 
-from methods.collect_info import getInformation, SearchSets
+from methods.collect_info import getSetInformation, SearchSets
 from methods.tools import formatWord, imageView, display_cards_info
 
 def SetAnalyzer():
@@ -81,7 +81,7 @@ def SetAnalyzer():
                 originalResponse = response
                 with tab3:
                     set_1_name = set_name
-                    set_1_info = getInformation(response)
+                    set_1_info = getSetInformation(response)
 
                     display_cards_info(set_1_info)
 

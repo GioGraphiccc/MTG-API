@@ -1,33 +1,71 @@
 import streamlit as st
 import datetime
 
+def getCardInformation(response):
+    #st.write(response)
+    colors = []
+    if 'card_faces' in response:
+        try:
+            colors.append(str(response['card_faces'][0]['colors'])) #collect each char and add to a new array
+            colors.append("/")
+            colors.append(str(response['card_faces'][1]['colors']))
+        except:
+            colors.append(str(response['colors']))
 
+        mana_cost = response['card_faces'][0]['mana_cost']
+        try:
+            img_url = response['card_faces'][0]['image_uris']['normal']
+            img_url = img_url + "/" + response['card_faces'][1]['image_uris']['normal']
+        except:
+            img_url = response['image_uris']['normal']
+    else:
+        colors = response['colors']
+        mana_cost = response['mana_cost']
+        img_url = response['image_uris']['normal'] 
+    id = response['id']
+    card_name = response['name']
+    card_type = response['type_line']
+    set_name  = response['set_name']                                  
+    keywords = response['keywords']
+    price = response['prices']['usd']               
+    priceF = response['prices']['usd_foil']      
+    rarity = response['rarity']                    
+    cmc = response['cmc']                         
+     
+    legalityS = response['legalities']['standard'] 
+    legalityC = response['legalities']['commander']
+    try:             
+        power_toughness = response['power'] + '/' + response['toughness']
+    except:
+        power_toughness = "N/A"
+    tcgplayer_id = response['tcgplayer_id']
+    
+    
+    info = [id, card_name, card_type, set_name,  price, priceF, rarity, colors, keywords,
+             cmc, mana_cost, legalityS, legalityC, power_toughness, tcgplayer_id, img_url]
+    return info
 
 def getImages(response, color, card_type, enlarge):
-    
-    response = response['data']
     #st.write(response)
     cardImages = []
     colorSortedImages = []
     cards_data = []
 
     try:
-        enlarge = True
-        if(enlarge):
-            for data in response:
-                #st.write(data)
-                cards_data.append({'img_type_color':(data['image_uris']['large'], data['type_line'], data['colors'])})
+        for Cards in response:
+            cards_data.append({'img_type_color':(Cards[15], Cards[2], Cards[7])})
             
             # for data in dataset_2:
             #     cards_data.append({'img_type_color':(data['image_uris']['large'], data['type_line'], data['colors'])})
-    except:
-        st.error("Error: It appears that this set does not contain images.")
+    except Exception as e:
+        # st.error("Error: It appears that this set does not contain images.")
+        # st.error(e)
         return ['noimage']
     #st.write(cards_data)
     if(len(color) != 0): #if color
         for i in range(len(cards_data)): #first, create colorSortedImages list with line types and color
             for col in cards_data[i]['img_type_color'][2]:
-
+                
                 if(color in col):
                     colorSortedImages.append(cards_data[i])
 
@@ -44,6 +82,7 @@ def getImages(response, color, card_type, enlarge):
     else: #if not color
         if(len(card_type) == 0): #neither color or type
             #st.write(cards_data)                #DEBUG LINE DEBUG
+            st.write("col")
             return cards_data
         
         else: #if not color but type
@@ -51,10 +90,10 @@ def getImages(response, color, card_type, enlarge):
                 for i in range(len(cards_data)):
                     if(types in cards_data[i]['img_type_color'][1]):
                         cardImages.append(cards_data[i])
-    #st.write(cardImages)
+    
     return cardImages
 
-def getInformation(response):
+def getSetInformation(response):
     cards_data = response['data']
     totalPrice = 0
     listOfPrices = []
