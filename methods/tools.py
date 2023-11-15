@@ -83,10 +83,10 @@ def createChart(data1, data_1_name, data2, data_2_name):
         chart_data = pd.DataFrame({data_1_name:data_1_sorted, data_2_name:data_2_sorted})
     return chart_data
 
-def imageView(cards, color, card_type, enlarge):
+def imageView(cards, color, card_type, rarity, enlarge):
     #st.write(response)
     #st.write(color)
-    filteredCards = filterImages(cards, color, card_type, enlarge)
+    filteredCards = filterImages(cards, color, card_type, rarity, enlarge)
     displayCardImages(filteredCards)
 
 def parsePastedText(pastedText, baseUrl): #NEW
@@ -301,33 +301,51 @@ def display_images_price_stats(cards):
     default = True
     enlarge = False
     with imageTab:
-        
-        selected_color = []
-        selected_card_type = []
-        col1, col2 = st.columns(2)
+        color = []
+        card_type = []
+        rarity = []
+        # selected_rarity = []
+        # selected_color = []
+        # selected_card_type = []
+        col1, col2, col3 = st.columns(3)
         with col1:
-            selected_color = st.radio("Choose a color",
+            color = st.radio("Choose a color",
                             ("ALL", "Multicolored","White", "Blue", "Green", "Black", "Red"))
+            if color == "ALL":
+                color = []
+            # if(st.button("Submit")):
+            #     submitted = True
+            #     selected_color = formatWord(selected_color)
+            #     
+            #     card_type = selected_card_type
+            #     selected_color = ""
+            #     selected_card_type = ""
             
         with col2:
-            selected_card_type = st.multiselect("Choose a card type.",
+            card_type = st.multiselect("Choose a card type.",
                                         ("Artifact", "Creature", "Enchantment", "Instant", "Sorcery", "Legendary"))
-            if(st.button("Submit")):
-                submitted = True
-                selected_color = formatWord(selected_color)
-                color = selected_color
-                card_type = selected_card_type
-                selected_color = ""
-                selected_card_type = ""
+  
+
+        with col3:
+            rarity = st.multiselect("Choose a card Rarity.", 
+                                                  ("Common", "Uncommon", "Rare", "Mythic"))
+
+
+        
+        st.write(color)
+
+        imageView(cards,"", card_type, rarity, enlarge)
 
         st.divider()
-        if(submitted):
-            imageView(cards, color, card_type, enlarge)
-            submitted = False
-            default = False
+        
+        
+        # if(submitted):
+        #     
+        #     submitted = False
+        #     default = False
                 
-        elif(default):
-            imageView(cards, [], [], enlarge)
+        # elif(default):
+        #     imageView(cards, [], [], [], enlarge)
     
     
 

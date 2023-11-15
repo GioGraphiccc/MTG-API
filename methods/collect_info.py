@@ -51,7 +51,7 @@ import requests
 #              cmc, mana_cost, legalityS, legalityC, power_toughness, tcgplayer_id, img_url]
 #     return info
 
-def filterImages(cards, color, card_types, enlarge):
+def filterImages(cards, color, card_types, rarity, enlarge):
     color_sorted_cards = []
     sorted_cards = []
     type_sorted_cards = []
@@ -69,7 +69,7 @@ def filterImages(cards, color, card_types, enlarge):
         for card in cards:
             if color in card.colors:
                 color_sorted_cards.append(card)
-        if not card_types:
+        if not card_types and not rarity:
             return color_sorted_cards #ONLY COLOR FILTER SELECTED
         
     if card_types and color_sorted_cards:
