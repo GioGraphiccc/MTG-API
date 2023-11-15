@@ -1,29 +1,30 @@
 import streamlit as st
 import pandas as pd
 import requests
+import matplotlib.pyplot as plt
 
-from methods.collect_info import getImages, getSetInformation
+from methods.collect_info import filterImages, AddKeywordsToDB, getCardsWithKeywords, GetCardTypes
+from methods.database_methods import addSetToDB
+from methods.Card import Card
 
-def collectResponses(response):
-    try: 
-        total_cost_cards = response['total_cost_cards']
-    except:
-        st.error("No cards with that search.")
-        return
-    results = response['data']
+def collectResponses(response, searchTerm):
     searchResults = {}
-    for i in range(total_cost_cards):
-        card_name = results[i]['name']
-        card_id = results[i]['id']
-        searchResults.update({card_name:card_id})
+    if(response['object'] == 'list'):
+        i = 0
+        for card in response['data']:
+            if searchTerm.lower() in card['name'].lower():
+                card_name = card['name']
+                i = i + 1
+                searchResults.update({card_name:i})    
     return searchResults
     
 def formatWord(response):
+    list_response = []
     if type(response) == list:
-        list_response = []
-        for i in range(len(response)):
-            list_response.append(formatWord(response[i]))
+        for item in response:
+            list_response.append(formatWord(item))
         return list_response
+
     if(response == "not_legal"):
         return "Not Legal"
     elif(response == "legal"):
@@ -38,13 +39,29 @@ def formatWord(response):
         return "B"
     elif(response == "Red"):
         return "R"
+    elif(response == "W"):
+        return "White"
+    elif(response == "U"):
+        return "Blue"
+    elif(response == "G"):
+        return "Green"
+    elif(response == "B"):
+        return "Black"
+    elif(response == "R"):
+        return "Red"
     elif(response == "Multicolored"):
         return "Multicolored"
     elif(response == "ALL"):
         return ""
     elif('.' in response):
         return response.replace("$", "")
-    return response
+    formattedword = ""
+    try:
+        for color in response.strip("{}").split(","):
+            formattedword = formattedword + formatWord(color) + ' '
+        return formattedword
+    except:
+        return ""
 
 def createChart(data1, data_1_name, data2, data_2_name):
     data_1_sorted = []
@@ -66,49 +83,40 @@ def createChart(data1, data_1_name, data2, data_2_name):
         chart_data = pd.DataFrame({data_1_name:data_1_sorted, data_2_name:data_2_sorted})
     return chart_data
 
-def imageView(response, color, card_type, enlarge):
+def imageView(cards, color, card_type, enlarge):
     #st.write(response)
-    firstpage, secondpage = st.tabs(["1", "2"])
-    with firstpage:
-        cardImagesOfSet = getImages(response,color, card_type, enlarge)
-        displayCardImages(cardImagesOfSet)
-    with secondpage:
-        try:
-            next_page = response['next_page']
-        except:
-            next_page = ""
-        if(next_page != ""):
-            response = requests.get(next_page).json()
-            cardImagesOfSet = getImages(response,color, card_type, enlarge)
-            #st.write(cardImagesOfSet)
-            if(displayCardImages(cardImagesOfSet) == 0):
-                st.error("Could not get images of cards for some reason.")
-        else:
-            st.error("No more cards from this set :(")
+    #st.write(color)
+    filteredCards = filterImages(cards, color, card_type, enlarge)
+    displayCardImages(filteredCards)
 
-def parsePastedText(pastedText, baseUrl):
+def parsePastedText(pastedText, baseUrl): #NEW
     pastedText = pastedText.strip()
     list_of_text = pastedText.split("\n")
     card_list = []
-
+    set_name = ""
+    collector_num = ""
     for line in list_of_text:
-        info = line.split(" ")
-        if(info[0].isdigit()):
-            numOfDuplicates = info.pop(0)
-        else:
-            numOfDuplicates = ""
-        if(info[len(info)-1].isdigit()):
-            collector_number = info.pop(len(info)-1)
-        else:
-            collector_number = ""
-        if "(" in info[len(info)-1] or ")" in info[len(info)-1] and len(info[len(info)-1].strip("()")) == 3:
-            set_name = info.pop(len(info)-1)
-        else:
-            set_name = ""
-        name = ' '.join(info)
-        card_list.append([numOfDuplicates, name, set_name, collector_number])
-        
+        if line.strip() in ["Commander", "Deck", ""]:
+            continue 
+        token_line = line.split(" ") #split the line into tokens. returned token array
+        if token_line[0].isdigit(): #retieve the num of duplicates from the first token
+            num_Duplicates = token_line[0] 
+            del token_line[0] #delete the token since we saved it into a var already
 
+        if len(token_line[len(token_line)-1]) > 1 and token_line[len(token_line)-1][0].isdigit(): #check if collector number is present by checking the first letter in the token
+                collector_num = token_line[len(token_line)-1]
+                token_line.remove(collector_num) #remove collector_num token from array
+
+        for token in token_line: #loop through the token array, remove each token to leave only the name token remaining. 
+            if "(" in token and ")" in token: #check to see if the set name is included in between parathensis
+                temp = token
+                set_name = token.strip("()")
+                token_line.remove(temp) #remove set name token after saved in var set_name
+
+        
+        name = ' '.join(token_line)
+        print(name)
+        card_list.append([num_Duplicates, name, set_name, collector_num])
     return card_list
 
 def getDataframePrices(data):
@@ -143,69 +151,89 @@ def getDataframePrices(data):
 
     return sorted(card_NamePrice.items(), key=lambda x:x[1], reverse= True), total_cost
 
-def displayCardImages(card_images):
+def displayCardImages(cards):
     #st.write(card_images)
     replace = st.empty()
     replace.empty()
-    if(card_images[0] == 'noimage'):
+    if(cards == ['noimage']):
         return 0
     col1_images = []
     col2_images = []
     col3_images = []
     col4_images = []
+
+    col1_prices = []
+    col2_prices = []
+    col3_prices = []
+    col4_prices = []
+
     col1, col2, col3, col4 = st.columns(4)
     i = 0
     while True:
-        if(i+4 > len(card_images)):
-            remaining = len(card_images) - i
+        if(i+4 > len(cards)):
+            remaining = len(cards) - i
             if(remaining == 0):
                 break
             if(remaining == 1):
-                col1_images.append(card_images[len(card_images)-1]['img_type_color'][0])
+                col1_images.append(cards[len(cards)-1].img_url)
+                col1_prices.append(Card.getBestPrice(cards[len(cards)-1]))
                 i = i + 1
                 break
             elif(remaining == 2):
-                col1_images.append(card_images[i]['img_type_color'][0])
-                col2_images.append(card_images[i+1]['img_type_color'][0])
+                col1_images.append(cards[i].img_url)
+                col1_prices.append(Card.getBestPrice(cards[i]))
+                col2_images.append(cards[i+1].img_url)
+                col2_prices.append(Card.getBestPrice(cards[i+1]))
+                
                 i = i + 2
                 break
             elif(remaining == 3):
-                col1_images.append(card_images[i]['img_type_color'][0])
-                col2_images.append(card_images[i+1]['img_type_color'][0])
-                col3_images.append(card_images[i+2]['img_type_color'][0]) 
+                col1_images.append(cards[i].img_url)
+                col1_prices.append(Card.getBestPrice(cards[i]))
+                col2_images.append(cards[i+1].img_url)
+                col2_prices.append(Card.getBestPrice(cards[i+1]))
+                col3_images.append(cards[i+2].img_url) 
+                col3_prices.append(Card.getBestPrice(cards[i+2])) 
                 i = i + 3
                 break  
         else:
-            col1_images.append(card_images[i]['img_type_color'][0])
-            col2_images.append(card_images[i+1]['img_type_color'][0])
-            col3_images.append(card_images[i+2]['img_type_color'][0])
-            col4_images.append(card_images[i+3]['img_type_color'][0])
+            col1_images.append(cards[i].img_url)
+            col1_prices.append(Card.getBestPrice(cards[i]))
+            col2_images.append(cards[i+1].img_url)
+            col2_prices.append(Card.getBestPrice(cards[i+1]))
+            col3_images.append(cards[i+2].img_url)
+            col3_prices.append(Card.getBestPrice(cards[i+2]))
+            col4_images.append(cards[i+3].img_url)
+            col4_prices.append(Card.getBestPrice(cards[i+3]))
             i = i + 4
 
     with replace:
         with col1:
-            for image in col1_images:
-                if(image.count("http") == 2):
-                    image = image[0:image.find("http")-1]
-                st.image(image)
+            for i in range(len(col1_images)):
+                if(col1_images[i].count("http") == 2):
+                    st.image(col1_images[i][0:col1_images[i].find("http")-1], caption=col1_prices[i])
+                else:
+                    st.image(col1_images[i], caption=col1_prices[i])
 
         with col2:
-            for image in col2_images:
-                if(image.count("http") == 2):
-                    image = image[0:image.find("http")-1]
-                st.image(image)
+            for i in range(len(col2_images)):
+                if(col2_images[i].count("http") == 2):
+                    st.image(col2_images[i][0:col2_images[i].find("http")-1], caption=col2_prices[i])
+                else:
+                    st.image(col2_images[i], caption=col2_prices[i])
 
         with col3:
-            for image in col3_images:
-                if(image.count("http") == 2):
-                    image = image[0:image.find("http")-1]
-                st.image(image)
-
+            for i in range(len(col3_images)):
+                if(col3_images[i].count("http") == 2):
+                    st.image(col3_images[i][0:col3_images[i].find("http")-1], caption=col3_prices[i])
+                else:
+                    st.image(col3_images[i], caption=col3_prices[i])
         with col4:
-            for image in col4_images:
-                if(image.count("http") == 2):
-                    image = image[0:image.find("http")-1]
-                st.image(image)
+            for i in range(len(col4_images)):
+                if(col4_images[i].count("http") == 2):
+                    st.image(col4_images[i][0:col4_images[i].find("http")-1], caption=col4_prices[i])
+                else:
+                    st.image(col4_images[i], caption=col4_prices[i])
 
 def display_cards_info(info):
     st.write("total_cost Price of Set: $%.2f" % info[0])
@@ -263,8 +291,7 @@ def convert_cards_info_to_Dataframe(info):
     #st.write(response)
     return colors, types, costs
 
-def display_images_price_stats(response):
-
+def display_images_price_stats(cards):
     imageTab, PriceTab, StatTab = st.tabs(["Cards Images", "Card List", "Set Statistics"])
     color = []
     card_type = []
@@ -283,32 +310,84 @@ def display_images_price_stats(response):
                             ("ALL", "Multicolored","White", "Blue", "Green", "Black", "Red"))
             
         with col2:
-            
             selected_card_type = st.multiselect("Choose a card type.",
-                                        ("Artifact", "Creature", "Enchantment", "Instant", "Sorcery"))
-            # if(st.button("Submit")):
-            #     submitted = True
-            selected_color = formatWord(selected_color)
-            color = selected_color
-            card_type = selected_card_type
-            selected_color = ""
-            selected_card_type = ""
-        # if(submitted):
-        imageView(response, color, card_type, enlarge)  
-        #     submitted = False
-        #     default = False
-            
-        # elif(default):
-        #     imageView(response, [], [], enlarge)
-    #colors_df, types_df, costs_df,  = convert_cards_info_to_Dataframe(info)
+                                        ("Artifact", "Creature", "Enchantment", "Instant", "Sorcery", "Legendary"))
+            if(st.button("Submit")):
+                submitted = True
+                selected_color = formatWord(selected_color)
+                color = selected_color
+                card_type = selected_card_type
+                selected_color = ""
+                selected_card_type = ""
+
+        st.divider()
+        if(submitted):
+            imageView(cards, color, card_type, enlarge)
+            submitted = False
+            default = False
+                
+        elif(default):
+            imageView(cards, [], [], enlarge)
+    
+    
+
+    with StatTab:
+        API_keywords = []
+        total_keywords = []
+        detailed = False
+        known_keywords = AddKeywordsToDB(cards)
+        total_keywords = getCardsWithKeywords(cards, known_keywords)
+
+        total_card_types = GetCardTypes(cards, detailed)
+
+        if not detailed:
+            total_keywords = {key: value for key, value in total_keywords.items() if value != 1} #remove items with value 1
+        total_keywords = dict(sorted(total_keywords.items(), key=lambda item: item[1], reverse=True))
+
+        total_card_types = dict(sorted(total_card_types.items(), key=lambda item: item[1], reverse=True))
+
+        #st.write(total_keywords)
+        #st.write(total_card_types)
+
+
+        col1_metric, col2_metric, col3_metric, col4_metric = st.columns(4, gap="small")
+        col1, col2 = createTable(total_keywords)
+        col1_metric.table({"Keywords":col1, "#":col2})
+
+        col1, col2 = createTable(total_card_types)
+        col2_metric.table({"Types":col1, "#":col2})
+        
+
 
     with PriceTab:
         st.write("WIP")
         col1, col2 = st.columns(2)
         with col1:
-            price_df, total_cost_cost = getDataframePrices(response)
-            st.dataframe(price_df)
-            st.write("total_cost: " + str(total_cost_cost))
+            print()
+            # price_df, total_cost_cost = getDataframePrices(response)
+            # st.dataframe(price_df)
+            # st.write("total_cost: " + str(total_cost_cost))
 
+def createTable(dataset):
+    col1 = []
+    col2 = []
+    if type(dataset) == dict:
+        for data in dataset:
+            col1.append(data)
+            col2.append(dataset[data])
+    return col1, col2
 
+def displayColors(colors):
+    color_imgs = []
+    for color in colors:
+        if color == "W":
+            color_imgs.append("templates/white.png")
+        elif color == "U":
+            color_imgs.append("templates/blue.png")
+        elif color == "B":
+            color_imgs.append("templates/black.png")
+        elif color == "R":
+            color_imgs.append("templates/red.png")
+        elif color == "G":
+            color_imgs.append("templates/green.png")
 

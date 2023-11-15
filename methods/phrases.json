@@ -1,0 +1,47 @@
+{
+    "Ramp": [
+        1,
+        2,
+        3
+    ],      
+    "Card Draw": [
+        1,
+        2,
+        3
+    ],
+    "Targeted Removal": [
+        1,
+        2,
+        3
+    ],
+    "Board Wipes": [
+        1,
+        2,
+        3
+    ],
+    "Counters": [
+        1,
+        2,
+        3
+    ],
+    "Lifegain": [
+        1,
+        2,
+        3
+    ],
+    "Pump": [
+        1,
+        2,
+        3
+    ],
+    "Reanimation": [
+        1,
+        2,
+        3
+    ],
+    "Targeted Tap": [
+        1,
+        2,
+        3
+    ]
+  }

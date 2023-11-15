@@ -1,0 +1,29 @@
+Search your library for a basic land card, put that card onto the battlefield tapped, then shuffle.
+Search your library for a basic land card, put that card onto the battlefield, then shuffle.
+Search your library for a Plains, Island, Swamp, or Mountain card, put it onto the battlefield tapped then shuffle.
+Search your library for up to two basic land cards, reveal those cards, put one onto the battlefield tapped and the other into your hand,
+     then shuffle
+Search your library for up to two basic land cards, put them onto the battlefield tapped, then shuffle
+Search your library for up to two Forest cards, put them onto the battlefield tapped, then shuffle
+Search your library for a Forest card, put that card onto the battlefield, then shuffle.
+Search your library for up to two basic land cards and/or Gate Cards, put them onto the battlefield tapped, then shuffle your library.
+When Wood Elces enters the battlefield, search your library for a Forest card, put that card onto the battlefield, then shuffle.
+Sacrifice Krosan Wayfarer: You may put a land card from your hand onto the battlefield.
+{2}, {T}, Sacrifice Wayfarer's Bauble: Search your library for a basic land card, put that card onto the battlefield tapped, then shuffle.
+Search your library for up to X basic land cards, where X is the number of lands you control, put them onto the battlefield tapped,
+     then shuffle.
+Landfall-Whenever a land enters the battlfield under your control, add one mana of any color. 
+Enchant Land. Whenever enchanted land is tapped for mana, its controller adds an additional one mana of any color. 
+Whenever you tap a a land for mana, add one mana of any type that land produced.
+{T}: Add {C}. {2}, {T}: Choose a color. Add an amount of mana of that color equal to your devotion to that color. 
+     (Your devotion to a color is the number of mana symbols of that color in the mana costs of permanents you control.)
+{T}: Add one mana of any color.
+{T}: Add one mana of any color to your mana pool.
+{T}: Add {C}{C}.
+{T}: Add {G} for each creature you control. 
+Moss Diamond enters the battlefield tapped. {T}: Add {G}.
+Add {B}{B}{B} 
+You may put a land card from your hand onto the battlefield
+You may play two additional lands on each of your turns
+You may play an additional land on each of your turns
+You may play lands from the top of your library

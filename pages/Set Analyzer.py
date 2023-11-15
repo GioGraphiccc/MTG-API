@@ -2,8 +2,10 @@ import streamlit as st
 import datetime
 import requests
 
-from methods.collect_info import getSetInformation, SearchSets
-from methods.tools import formatWord, imageView, display_cards_info
+from methods.collect_info import SearchSets
+from methods.tools import formatWord, imageView, display_cards_info, display_images_price_stats
+from methods.database_methods import addSetToDB, fetchCard, init_connection
+from methods.Card import Card
 
 def SetAnalyzer():
     baseUrl = "https://api.scryfall.com"
@@ -20,6 +22,7 @@ def SetAnalyzer():
             option = ""
             url = baseUrl + "/sets"
             response = requests.get(url).json()
+            #st.write(response)
             results = SearchSets(response, search, selected_set_type, date)
             if results:
                 option = st.selectbox('Results',results, key=1)
@@ -29,7 +32,7 @@ def SetAnalyzer():
             if(option != ""):
                 url = baseUrl + "/sets/" + results[option]
                 set_response = requests.get(url).json()
-                st.write(set_response)                                      #DEBUG LINE
+                #st.write(set_response)                                      #DEBUG LINE
                 st.divider()
                 
                 set_name = set_response['name']
@@ -39,57 +42,39 @@ def SetAnalyzer():
                 st.image(set_response['icon_svg_uri'])
 
                 url = set_response['search_uri']
-                response = requests.get(url).json()
-                st.write(response)                                          #DEBUG LINE
-                
-                tab1, tab2, tab3 = st.tabs(["Cards Images", "Card List", "Set Statistics"])
-                color = []
-                card_type = []
-                selected_color = []
-                selected_card_type = {}
-                submitted = False
-                default = True
-                enlarge = False
-                with tab1:
-                    
-                    selected_color = []
-                    selected_card_type = []
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        selected_color = st.radio("Choose a color",
-                                        ("ALL", "Multicolored","White", "Blue", "Green", "Black", "Red"))
-                        
-                    with col2:
-                        
-                        selected_card_type = st.multiselect("Choose a card type.",
-                                                   ("Artifact", "Creature", "Enchantment", "Instant", "Sorcery"))
-                        if(st.button("Submit")):
-                            submitted = True
-                            selected_color = formatWord(selected_color)
-                            color = selected_color
-                            card_type = selected_card_type
-                            selected_color = ""
-                            selected_card_type = ""
-                if(submitted):
-                    imageView(response, color, card_type, enlarge)
-                    submitted = False
-                    default = False
-                     
-                elif(default):
-                    imageView(response, [], [], enlarge)
-                
-                originalResponse = response
-                with tab3:
-                    set_1_name = set_name
-                    set_1_info = getSetInformation(response)
+                cardlist_response = requests.get(url).json()
+                #st.write(cardlist_response)                                          #DEBUG LINE
+                Card_Set = []
+                for card in cardlist_response["data"]:
+                    Card_Set.append(Card.setCardInformation(card))
 
-                    display_cards_info(set_1_info)
+                if(cardlist_response["has_more"]):
+                    cardlist_response = requests.get(cardlist_response['next_page']).json()
+                    for card in cardlist_response["data"]:
+                        Card_Set.append(Card.setCardInformation(card))
+                if(cardlist_response["has_more"]):
+                    cardlist_response = requests.get(cardlist_response['next_page']).json()
+                    for card in cardlist_response["data"]:
+                        Card_Set.append(Card.setCardInformation(card))
+                if(cardlist_response["has_more"]):
+                    cardlist_response = requests.get(cardlist_response['next_page']).json()
+                    for card in cardlist_response["data"]:
+                        Card_Set.append(Card.setCardInformation(card))
+                if(cardlist_response["has_more"]):
+                    cardlist_response = requests.get(cardlist_response['next_page']).json()
+                    for card in cardlist_response["data"]:
+                        Card_Set.append(Card.setCardInformation(card))
 
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        st.write("Release Date: " + release_date)
-                        st.write("Number of Cards:  " + numCardsInSet)
-                    
+                
+                display_images_price_stats(Card_Set) #keep first parameter empty since we cannot obtain from db using Set Analyzer
+
+                #st.write(Card_Set)
+                addSetToDB(Card_Set)
+                
+                
+
+
+
                 #     with col2:
                 #         set_2_name = ""
                 #         displayData = True

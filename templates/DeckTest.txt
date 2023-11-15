@@ -1,0 +1,78 @@
+1 Ezuri, Claw of Progress (2X2) 211
+1 Arachnogenesis (CMM) 272
+1 Arcane Denial (WOC) 84
+1 Arcane Signet (MOC) 348
+1 Arwen, Weaver of Hope (LTC) 35
+1 Awaken the Woods (BRO) 170
+1 Bala Ged Recovery // Bala Ged Sanctuary (ZNR) 180
+1 Boseiju, Who Endures (NEO) 266
+1 Botanical Sanctum (KLD) 244
+1 Branching Evolution (JMP) 29
+1 Breeding Pool (RNA) 246
+1 Champion of Lambholt (MOC) 293
+1 Chasm Skulker (M15) 46
+1 Cold-Eyed Selkie (C20) 204
+1 Command Tower (NEC) 167
+1 Court of Garenbrig (WOC) 33
+1 Crop Rotation (DMR) 154
+1 Crystalline Crawler (PLIST) 1233
+1 Cultivator of Blades (KLD) 151
+1 Cyclonic Rift (MM3) 35
+1 Devoted Druid (PLIST) 782
+1 Doubling Season (WOT) 52
+1 Dreamroot Cascade (VOW) 282
+1 Elusive Otter // Grove's Bounty (WOE) 225
+1 Exotic Orchard (CM2) 250
+1 Ezuri's Predation (CLB) 824
+8 Forest (ELD) 266
+1 Gaea's Cradle (USG) 321
+1 Galadhrim Ambush (LTC) 38
+1 Glasspool Mimic // Glasspool Shore (ZNR) 60
+1 Glen Elendra Archmage (WOC) 94
+1 Growing Rites of Itlimoc // Itlimoc, Cradle of the Sun (XLN) 191
+1 Gyre Sage (MIC) 140
+1 Hadana's Climb // Winged Temple of Orazca (RIX) 158
+1 Hangarback Walker (J22) 772
+1 Hardened Scales (WOT) 55
+1 Herald of Secret Streams (XLN) 59
+1 Heroic Intervention (M21) 188
+1 Hinterland Harbor (DOM) 240
+1 Inspiring Call (JMP) 404
+7 Island (UND) 89
+1 Kami of Whispered Hopes (MOM) 196
+1 Mana Drain (CMR) 80
+1 Managorger Hydra (C21) 199
+1 Marwyn, the Nurturer (DOM) 172
+1 Master Biomancer (CM2) 159
+1 Misty Rainforest (MH2) 250
+1 Mox Amber (BRR) 35
+1 Myriad Landscape (C19) 261
+1 Nature's Lore (5ED) 316
+1 Oran-Rief, the Vastwood (DDU) 28
+1 Otawara, Soaring City (NEO) 271
+1 Overwhelming Stampede (C19) 175
+1 Ozolith, the Shattered Spire (PMOM) 198p
+1 Pir, Imaginative Rascal (BBD) 11
+1 Reflecting Pool (CLB) 358
+1 Rejuvenating Springs (CMR) 354
+1 Reliquary Tower (M13) 227
+1 Rhystic Study (MB1) 468
+1 Rishkar, Peema Renegade (MOC) 310
+1 Rogue's Passage (MB1) 1684
+1 Runadi, Behemoth Caller (J22) 44
+1 Sage of Hours (JOU) 50
+1 Sakashima of a Thousand Faces (CMR) 89
+1 Simic Ascendancy (RNA) 207
+1 Skyshroud Claim (CMM) 321
+1 Sol Ring (C13) 259
+1 Spark Double (CMM) 856
+1 The Great Henge (ELD) 161
+1 The Ozolith (PIKO) 237p
+1 Three Visits (CMR) 261
+1 Toothy, Imaginary Friend (BBD) 12
+1 Tribute to the World Tree (MOM) 211
+1 Tropical Island (3ED) 288
+1 Urza's Saga (MH2) 259
+1 Walking Ballista (AER) 181
+1 Windswift Slice (LTC) 45
+1 Wood Elves (NCC) 321
