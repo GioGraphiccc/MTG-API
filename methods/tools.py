@@ -3,9 +3,10 @@ import pandas as pd
 import requests
 import matplotlib.pyplot as plt
 
-from methods.collect_info import filterImages, AddKeywordsToDB, getCardsWithKeywords, GetCardTypes
+from methods.collect_info import AddKeywordsToDB, getCardsWithKeywords, GetCardTypes
 from methods.database_methods import addSetToDB
 from methods.Card import Card
+
 
 def collectResponses(response, searchTerm):
     searchResults = {}
@@ -83,11 +84,63 @@ def createChart(data1, data_1_name, data2, data_2_name):
         chart_data = pd.DataFrame({data_1_name:data_1_sorted, data_2_name:data_2_sorted})
     return chart_data
 
-def imageView(cards, color, card_type, rarity, enlarge):
+def imageView(cards, colors, card_type, rarity, enlarge):
     #st.write(response)
-    #st.write(color)
-    filteredCards = filterImages(cards, color, card_type, rarity, enlarge)
+    #st.write(colors)
+    filteredCards = filterImages(cards, colors, card_type, rarity, enlarge)
     displayCardImages(filteredCards)
+
+def filterImages(cards, colors, card_types, rarities, enlarge):
+    color_sorted_cards = []
+    sorted_cards = []
+    type_sorted_cards = []
+    
+    if not colors and not card_types and not rarities:
+        st.write("No Filter Selected.")
+        return cards
+    
+    if "Gray" in colors:
+        st.write("Gray Filter Selected.")
+        colors.remove("Gray")
+        for card in cards:
+            if len(card.colors) == 0:
+                sorted_cards.append(card)
+
+    if "Multicolored" in colors:
+        st.write("Multicolored Filter Selected")
+        colors.remove("Multicolored")
+        for card in cards:
+            if sum(1 for char in card.colors if char.isalpha()) > 1:
+                sorted_cards.append(card)
+        
+    if colors:
+        st.write("Other Color Filter Selected.")
+        for color in colors:
+            for card in cards:    
+                for card_color in card.colors:
+                    if formatWord(color) == card_color:
+                        sorted_cards.append(card)
+
+        
+    if card_types:
+        st.write("Card Type Filter Selected.")
+        if not sorted_cards:
+            sorted_cards = cards
+        for card_type in card_types:
+            for card in sorted_cards:
+                if card_type in card.card_type:
+                    sorted_cards.append(card)
+
+    if rarities:
+        st.write("Rarity Filter Selected.")
+        if not sorted_cards:
+            sorted_cards = cards
+        for rarity in rarities:
+            for card in sorted_cards:
+                if rarity in card.rarity:
+                    sorted_cards.append(card)
+
+    return sorted_cards  
 
 def parsePastedText(pastedText, baseUrl): #NEW
     pastedText = pastedText.strip()
@@ -152,7 +205,7 @@ def getDataframePrices(data):
     return sorted(card_NamePrice.items(), key=lambda x:x[1], reverse= True), total_cost
 
 def displayCardImages(cards):
-    #st.write(card_images)
+    #st.write(cards)
     replace = st.empty()
     replace.empty()
     if(cards == ['noimage']):
@@ -301,7 +354,7 @@ def display_images_price_stats(cards):
     default = True
     enlarge = False
     with imageTab:
-        color = []
+        #colors = []
         card_type = []
         rarity = []
         # selected_rarity = []
@@ -309,10 +362,8 @@ def display_images_price_stats(cards):
         # selected_card_type = []
         col1, col2, col3 = st.columns(3)
         with col1:
-            color = st.radio("Choose a color",
-                            ("ALL", "Multicolored","White", "Blue", "Green", "Black", "Red"))
-            if color == "ALL":
-                color = []
+            colors = st.multiselect("Choose a color",
+                            ("Gray", "Multicolored","White", "Blue", "Green", "Black", "Red"))
             # if(st.button("Submit")):
             #     submitted = True
             #     selected_color = formatWord(selected_color)
@@ -332,9 +383,8 @@ def display_images_price_stats(cards):
 
 
         
-        st.write(color)
 
-        imageView(cards,"", card_type, rarity, enlarge)
+        imageView(cards, colors, card_type, rarity, enlarge)
 
         st.divider()
         

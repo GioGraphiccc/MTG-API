@@ -2,6 +2,7 @@ import streamlit as st
 import datetime
 import requests
 
+
 # def getCardInformation(response):
 #     #st.write(response)
 #     colors = []
@@ -51,43 +52,7 @@ import requests
 #              cmc, mana_cost, legalityS, legalityC, power_toughness, tcgplayer_id, img_url]
 #     return info
 
-def filterImages(cards, color, card_types, rarity, enlarge):
-    color_sorted_cards = []
-    sorted_cards = []
-    type_sorted_cards = []
     
-    if not color and not card_types:
-        return cards
-
-    if color == "Multicolored":
-        for card in cards:
-            if sum(1 for char in card.colors if char.isalpha()) > 1:
-                color_sorted_cards.append(card)
-        if not card_types:
-            return color_sorted_cards
-    else:
-        for card in cards:
-            if color in card.colors:
-                color_sorted_cards.append(card)
-        if not card_types and not rarity:
-            return color_sorted_cards #ONLY COLOR FILTER SELECTED
-        
-    if card_types and color_sorted_cards:
-        for card in color_sorted_cards:
-            for card_type in card_types:
-                if card_type in card.card_type:
-                    sorted_cards.append(card)
-        
-        return sorted_cards  #COLOR AND TYPE SELECTED
-    
-    if card_types and not color:
-        for card in cards:
-            for card_type in card_types:
-                if card_type in card.card_type:
-                    type_sorted_cards.append(card)
-        return type_sorted_cards  #ONLY TYPE SELECTED
-    
-
 def getSetInformation(response):
     cards_data = response['data']
     totalPrice = 0

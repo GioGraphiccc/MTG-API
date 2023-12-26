@@ -76,7 +76,7 @@ def CardAnalyzer():
                     col1_metric.metric("", "Foil Price", price)
 
                 col2_metric.metric("", "Standard", ("+" if formatWord(card.legalityS) == "Legal" else "-") + formatWord(card.legalityS),label_visibility='hidden')
-                col2_metric.metric("", "Commander", ("+" if formatWord(card.legalityC) == "Legal" else "-") + formatWord(card.legalityC),label_visibility='hidden')
+                col2_metric.metric("", "EDH", ("+" if formatWord(card.legalityC) == "Legal" else "-") + formatWord(card.legalityC),label_visibility='hidden')
                 
                 
                 
