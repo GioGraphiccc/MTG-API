@@ -193,7 +193,7 @@ def getCardsWithKeywords(cards, known_keywords):
 
     return num_found_keywords
 
-def SearchSets(response, search, set_type, date):
+def SearchSets(response, search, set_type):
     data = response['data']
     #st.write("Search: " + search)
     setNamesandID = {}

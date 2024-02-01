@@ -34,13 +34,13 @@ def addCardToDB(card, conn):
     
     set_name = formatQuery(card.set_name)
     card_name = formatQuery(card.card_name)
-    query = "INSERT INTO Cards VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+    query = "INSERT INTO Cards VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
     try:
 
         with conn.cursor() as cur:
             cur.execute(query, (card.id, card_name, card.card_type, set_name, card.price, card.priceF, card.rarity,
                             card.colors, card.keywords, card.cmc, card.mana_cost, card.legalityC, card.legalityS,
-                            card.power_toughness, card.tcgplayer_id, card.img_url, card.desc, card.desc2))
+                            card.power_toughness, card.tcgplayer_id, card.img_url, card.desc, card.desc2, card.uri))
             conn.commit()
         #st.success("Card Added to Database!")
     except errors.UniqueViolation as e:
@@ -89,8 +89,9 @@ def fetchCard(card_name, conn):
                 img_url = results[0][15]
                 desc = results[0][16]
                 desc2 = results[0][17]
+                uri = results[0][18]
                 Card_obj = Card(id, card_name, card_type, set_name,  price, priceF, rarity, colors, keywords,
-                    cmc, mana_cost, legalityS, legalityC, power_toughness, tcgplayer_id, img_url, desc, desc2)
+                    cmc, mana_cost, legalityS, legalityC, power_toughness, tcgplayer_id, img_url, desc, desc2, uri)
                 return Card_obj
             return 0
     except errors.InFailedSqlTransaction:

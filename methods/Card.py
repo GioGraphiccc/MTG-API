@@ -1,6 +1,6 @@
 class Card:
     def __init__(self, id, card_name, card_type, set_name,  price, priceF, rarity, colors, keywords,
-             cmc, mana_cost, legalityC, legalityS, power_toughness, tcgplayer_id, img_url, desc, desc2):
+             cmc, mana_cost, legalityC, legalityS, power_toughness, tcgplayer_id, img_url, desc, desc2, uri):
         
         self.id = id
         self.card_name = card_name
@@ -20,6 +20,7 @@ class Card:
         self.img_url = img_url
         self.desc = desc
         self.desc2 = desc2
+        self.uri = uri
 
     def __str__(self):
         return f"{self.card_name} ({self.cmc}) - {self.card_type}"
@@ -79,8 +80,9 @@ class Card:
             except KeyError:
                 desc = 'N/A'
                 desc2 = 'N/A'
+        uri = response['uri']
         card = Card(id, card_name, card_type, set_name,  price, priceF, rarity, colors, keywords,
-                    cmc, mana_cost, legalityC, legalityS, power_toughness, tcgplayer_id, img_url, desc, desc2)
+                    cmc, mana_cost, legalityC, legalityS, power_toughness, tcgplayer_id, img_url, desc, desc2, uri)
         
         return card
     
@@ -104,6 +106,7 @@ class Card:
         info.append(card.img_url)
         info.append(card.desc)
         info.append(card.desc2)
+        info.append(card.uri)
         return info
 
     def getBestPrice(card):

@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-from methods.tools import formatWord, collectResponses
+from methods.tools import formatWord, collectResponses, addSetNamesToFile
 from methods.database_methods import addCardToDB, fetchCard, init_connection
 from methods.Card import Card
 
@@ -81,7 +81,10 @@ def CardAnalyzer():
                 
                 
                 
-                st.write("Set: " + card.set_name)
+                st.write("Set: " + card.set_name.replace("'", "", 1))
+
+                addSetNamesToFile({card.set_name.replace("'", "", 1):""})
+
             with col2:
                 #replace = st.empty()
                 if(card.img_url.count("http") == 2):

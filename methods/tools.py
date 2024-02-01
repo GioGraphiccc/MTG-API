@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests
 import matplotlib.pyplot as plt
-
+from streamlit_image_select import image_select
 from methods.collect_info import AddKeywordsToDB, getCardsWithKeywords, GetCardTypes
 from methods.database_methods import addSetToDB
 from methods.Card import Card
@@ -84,20 +84,28 @@ def createChart(data1, data_1_name, data2, data_2_name):
         chart_data = pd.DataFrame({data_1_name:data_1_sorted, data_2_name:data_2_sorted})
     return chart_data
 
-def imageView(cards, colors, card_type, rarity, enlarge):
+def imageView(cards, colors, card_type, rarity, enlarge, priceSort):
     #st.write(response)
     #st.write(colors)
-    filteredCards = filterImages(cards, colors, card_type, rarity, enlarge)
+    filteredCards = filterImages(cards, colors, card_type, rarity, enlarge, priceSort)
     displayCardImages(filteredCards)
 
-def filterImages(cards, colors, card_types, rarities, enlarge):
+def filterImages(cards, colors, card_types, rarities, enlarge, priceSort):
+    if(colors):
+        temp = []
+        for color in colors:
+            temp.append(formatWord(color))
+        colors = temp
     color_sorted_cards = []
+    rarity_sorted_cards = []
+    card_type_sorted_cards = []
     sorted_cards = []
     type_sorted_cards = []
+    multicolored_sorted_cards = []
     
     if not colors and not card_types and not rarities:
         st.write("No Filter Selected.")
-        return cards
+        return SortCardsByPrice(cards)
     
     if "Gray" in colors:
         st.write("Gray Filter Selected.")
@@ -105,43 +113,135 @@ def filterImages(cards, colors, card_types, rarities, enlarge):
         for card in cards:
             if len(card.colors) == 0:
                 sorted_cards.append(card)
+    else:
+        sorted_cards = cards
 
     if "Multicolored" in colors:
         st.write("Multicolored Filter Selected")
         colors.remove("Multicolored")
-        for card in cards:
+        for card in sorted_cards:
             if sum(1 for char in card.colors if char.isalpha()) > 1:
-                sorted_cards.append(card)
-        
-    if colors:
-        st.write("Other Color Filter Selected.")
-        for color in colors:
-            for card in cards:    
-                for card_color in card.colors:
-                    if formatWord(color) == card_color:
-                        sorted_cards.append(card)
+                multicolored_sorted_cards.append(card)
+        sorted_cards = multicolored_sorted_cards
 
-        
-    if card_types:
+    #CARDS THAT CONTAIN ANY ONE OF THE SELECTED COLORS
+    # if colors:
+    #     st.write("Other Color Filter Selected.")
+    #     for color in colors:
+    #         for card in sorted_cards:    
+    #             for card_color in card.colors:
+    #                 if formatWord(color) == card_color:
+    #                     color_sorted_cards.append(card)
+    
+    #CARDS THAT CONTAIN ALL OF THE SELECTED COLORS
+    if colors:
+        st.write(colors)
+        for card in sorted_cards:    
+            if len(list(set(colors) & set(card.colors))) == len(colors):
+                color_sorted_cards.append(card)
+        sorted_cards = color_sorted_cards
+
+    if card_types:                                 #Card Type Sort
         st.write("Card Type Filter Selected.")
-        if not sorted_cards:
-            sorted_cards = cards
+
         for card_type in card_types:
             for card in sorted_cards:
                 if card_type in card.card_type:
-                    sorted_cards.append(card)
-
-    if rarities:
+                    card_type_sorted_cards.append(card)
+        sorted_cards = card_type_sorted_cards
+        
+    if rarities:                                  #Rarity Sort
         st.write("Rarity Filter Selected.")
         if not sorted_cards:
             sorted_cards = cards
         for rarity in rarities:
             for card in sorted_cards:
                 if rarity in card.rarity:
-                    sorted_cards.append(card)
+                    rarity_sorted_cards.append(card)
+        sorted_cards = rarity_sorted_cards
+      
+    if(priceSort):                                #Price Sort
+        sorted_cards = SortCardsByPrice(sorted_cards)
+    return sorted_cards
+    
 
-    return sorted_cards  
 
+def SortCardsByPrice(cards):
+    noPriceCards = []
+    card_price_dict = {}
+    sorted_cards = []
+    for card in cards:
+        if(Card.getBestPrice(card) == "N/A"):
+            noPriceCards.append(card)
+            continue
+        card_price = Card.getBestPrice(card)
+        #print(card_price.strip("$"))
+        card_price_dict.update({card:card_price.strip("$")})
+
+    card_price_dict = dict(sorted(card_price_dict.items(), key=lambda item: item[1]))
+                
+   
+    for card_price in card_price_dict:
+        print(card_price.card_name + ": " + str(Card.getBestPrice(card_price)))
+        sorted_cards.append(card_price)
+
+    sorted_cards.reverse()
+
+    for noPrice_card in noPriceCards:
+        sorted_cards.append(noPrice_card)
+
+    return sorted_cards
+
+    # price_sorted = []
+    # NoPriceCards = []
+    # temp = []
+    # maxNumCards = len(cards)
+    # for card in cards:
+        
+    #     cardPrice = Card.getBestPrice(card)
+    #     sorted_card_index = 0
+
+    #     if(cardPrice == "N/A"):
+    #         NoPriceCards.append(card)
+    #         cards.remove(card)
+    #         continue
+
+    #     elif(len(price_sorted) == 0):
+    #         price_sorted.append(card)
+
+    #     elif(Card.getBestPrice(price_sorted[len(price_sorted)-1]) < Card.getBestPrice(card)):
+    #         price_sorted.append(card)
+    #         sorted_card_index += 1
+
+    #     elif(Card.getBestPrice(price_sorted[0]) > Card.getBestPrice(card)):
+    #         price_sorted.insert(0, card)
+        
+    #     for sorted_card in price_sorted:
+    #         sorted_card_price = Card.getBestPrice(sorted_card)
+
+    #         if(sorted_card_index == maxNumCards):
+    #             break
+    #         if(sorted_card_price >= cardPrice and not(sorted_card.card_name == card.card_name)):
+    #             price_sorted.insert(sorted_card_index, card)
+    #             print(Card.getBestPrice(card) + " " + str(sorted_card_index) + " " + str(len(price_sorted)))
+    #             sorted_card_index += 1
+    #             continue
+            
+            
+        # if(sorted_card_index == maxNumCards):
+        #     break
+
+
+            
+
+    # file = open("methods\pricelist.txt", "w")       
+    # file.write(Card.getBestPrice(card) + "\n")
+    
+
+        
+    # file.close()
+
+    # return price_sorted
 def parsePastedText(pastedText, baseUrl): #NEW
     pastedText = pastedText.strip()
     list_of_text = pastedText.split("\n")
@@ -168,7 +268,7 @@ def parsePastedText(pastedText, baseUrl): #NEW
 
         
         name = ' '.join(token_line)
-        print(name)
+        #print(name)
         card_list.append([num_Duplicates, name, set_name, collector_num])
     return card_list
 
@@ -220,6 +320,11 @@ def displayCardImages(cards):
     col3_prices = []
     col4_prices = []
 
+    col1_uri = []
+    col2_uri = []
+    col3_uri = []
+    col4_uri = []
+
     col1, col2, col3, col4 = st.columns(4)
     i = 0
     while True:
@@ -230,34 +335,50 @@ def displayCardImages(cards):
             if(remaining == 1):
                 col1_images.append(cards[len(cards)-1].img_url)
                 col1_prices.append(Card.getBestPrice(cards[len(cards)-1]))
+                col1_uri.append(cards[len(cards)-1].uri)
                 i = i + 1
                 break
             elif(remaining == 2):
                 col1_images.append(cards[i].img_url)
                 col1_prices.append(Card.getBestPrice(cards[i]))
+                col1_uri.append(cards[i].uri)
+
                 col2_images.append(cards[i+1].img_url)
                 col2_prices.append(Card.getBestPrice(cards[i+1]))
-                
+                col2_uri.append(cards[i+1].uri)
                 i = i + 2
                 break
             elif(remaining == 3):
                 col1_images.append(cards[i].img_url)
                 col1_prices.append(Card.getBestPrice(cards[i]))
+                col1_uri.append(cards[i].uri)
+
                 col2_images.append(cards[i+1].img_url)
                 col2_prices.append(Card.getBestPrice(cards[i+1]))
+                col2_uri.append(cards[i+1].uri)
+
                 col3_images.append(cards[i+2].img_url) 
                 col3_prices.append(Card.getBestPrice(cards[i+2])) 
+                col3_uri.append(cards[i+2].uri)
                 i = i + 3
                 break  
         else:
             col1_images.append(cards[i].img_url)
             col1_prices.append(Card.getBestPrice(cards[i]))
+            col1_uri.append(cards[i].uri)
+
             col2_images.append(cards[i+1].img_url)
             col2_prices.append(Card.getBestPrice(cards[i+1]))
+            col2_uri.append(cards[i+1].uri)
+
             col3_images.append(cards[i+2].img_url)
             col3_prices.append(Card.getBestPrice(cards[i+2]))
+            col3_uri.append(cards[i+2].uri)
+
             col4_images.append(cards[i+3].img_url)
             col4_prices.append(Card.getBestPrice(cards[i+3]))
+            col4_uri.append(cards[i+3].uri)
+
             i = i + 4
 
     with replace:
@@ -265,28 +386,36 @@ def displayCardImages(cards):
             for i in range(len(col1_images)):
                 if(col1_images[i].count("http") == 2):
                     st.image(col1_images[i][0:col1_images[i].find("http")-1], caption=col1_prices[i])
+                    st.button("View Card",key=col1_uri[i], use_container_width=True)
                 else:
                     st.image(col1_images[i], caption=col1_prices[i])
+                    st.button("View Card",key=col1_uri[i], use_container_width=True)
 
         with col2:
             for i in range(len(col2_images)):
                 if(col2_images[i].count("http") == 2):
                     st.image(col2_images[i][0:col2_images[i].find("http")-1], caption=col2_prices[i])
+                    st.button("View Card",key=col2_uri[i], use_container_width=True)
                 else:
                     st.image(col2_images[i], caption=col2_prices[i])
+                    st.button("View Card",key=col2_uri[i], use_container_width=True)
 
         with col3:
             for i in range(len(col3_images)):
                 if(col3_images[i].count("http") == 2):
                     st.image(col3_images[i][0:col3_images[i].find("http")-1], caption=col3_prices[i])
+                    st.button("View Card",key=col3_uri[i], use_container_width=True)
                 else:
                     st.image(col3_images[i], caption=col3_prices[i])
+                    st.button("View Card",key=col3_uri[i], use_container_width=True)
         with col4:
             for i in range(len(col4_images)):
                 if(col4_images[i].count("http") == 2):
                     st.image(col4_images[i][0:col4_images[i].find("http")-1], caption=col4_prices[i])
+                    st.button("View Card",key=col4_uri[i], use_container_width=True)
                 else:
                     st.image(col4_images[i], caption=col4_prices[i])
+                    st.button("View Card",key=col4_uri[i], use_container_width=True)
 
 def display_cards_info(info):
     st.write("total_cost Price of Set: $%.2f" % info[0])
@@ -363,41 +492,19 @@ def display_images_price_stats(cards):
         col1, col2, col3 = st.columns(3)
         with col1:
             colors = st.multiselect("Choose a color",
-                            ("Gray", "Multicolored","White", "Blue", "Green", "Black", "Red"))
-            # if(st.button("Submit")):
-            #     submitted = True
-            #     selected_color = formatWord(selected_color)
-            #     
-            #     card_type = selected_card_type
-            #     selected_color = ""
-            #     selected_card_type = ""
-            
+                            ("Gray", "Multicolored","White", "Blue", "Green", "Black", "Red"))       
         with col2:
             card_type = st.multiselect("Choose a card type.",
                                         ("Artifact", "Creature", "Enchantment", "Instant", "Sorcery", "Legendary"))
-  
-
         with col3:
             rarity = st.multiselect("Choose a card Rarity.", 
                                                   ("Common", "Uncommon", "Rare", "Mythic"))
+            
+        #st.button("Sort By Price")
+        priceSort = True
+        imageView(cards, colors, card_type, rarity, enlarge, priceSort)
 
-
-        
-
-        imageView(cards, colors, card_type, rarity, enlarge)
-
-        st.divider()
-        
-        
-        # if(submitted):
-        #     
-        #     submitted = False
-        #     default = False
-                
-        # elif(default):
-        #     imageView(cards, [], [], [], enlarge)
-    
-    
+        st.divider()   
 
     with StatTab:
         API_keywords = []
@@ -431,10 +538,45 @@ def display_images_price_stats(cards):
         st.write("WIP")
         col1, col2 = st.columns(2)
         with col1:
+            
             print()
             # price_df, total_cost_cost = getDataframePrices(response)
             # st.dataframe(price_df)
             # st.write("total_cost: " + str(total_cost_cost))
+def displaySetPreviews(selected_set_type):
+    placeholder = st.empty()
+    with placeholder.container():
+        st.image("templates\Murders_At_Karlov_Manor.jpg")
+        st.image("templates\Fallout.png")
+    return placeholder
+
+def fetchSetCards(selected_set, results, baseUrl):
+    url = baseUrl + "/sets/" + results[selected_set]
+    set_response = requests.get(url).json()
+    #st.write(set_response)                                      #DEBUG LINE
+    st.divider()
+    
+    set_name = set_response['name']
+    st.header(set_name)
+    numCardsInSet = str(set_response['card_count'])
+    release_date = set_response['released_at']
+    st.image(set_response['icon_svg_uri'])
+
+    url = set_response['search_uri']
+    cardlist_response = requests.get(url).json()
+    #st.write(cardlist_response)                                          #DEBUG LINE
+    Card_Set = []
+    for card in cardlist_response["data"]:
+        Card_Set.append(Card.setCardInformation(card))
+
+    while cardlist_response["has_more"]:
+        if(cardlist_response["has_more"]):
+            cardlist_response = requests.get(cardlist_response['next_page']).json()
+            for card in cardlist_response["data"]:
+                Card_Set.append(Card.setCardInformation(card))
+        if not cardlist_response["has_more"]:
+            break
+    return Card_Set
 
 def createTable(dataset):
     col1 = []
@@ -458,4 +600,18 @@ def displayColors(colors):
             color_imgs.append("templates/red.png")
         elif color == "G":
             color_imgs.append("templates/green.png")
+
+def addSetNamesToFile(results):
+    file = open("methods\Set_Names.txt", "r")
+    set_list = file.read().split("\n")
+    file.close()
+    
+
+    file = open("methods\Set_Names.txt", "a")
+    for set_name in results:
+        if set_name in set_list:
+            continue
+        else:
+            file.write(set_name + "\n")
+    file.close()
 

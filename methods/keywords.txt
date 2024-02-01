@@ -332,3 +332,179 @@ Adamant
 Annihilator
 Constellation
 Constellation
+Role token
+Role token
+Totem armor
+Extort
+Extort
+Spectacle
+Dredge
+Hellbent
+Haunt
+Unleash
+Unleash
+Riot
+Bloodrush
+Hellbent
+Bloodrush
+Haunt
+Bloodthirst
+Forecast
+Companion
+Madness
+Madness
+Blitz
+Blitz
+Shroud
+Prowl
+Awaken
+Prowl
+Cipher
+Reconfigure
+Reconfigure
+Ninjutsu
+Ninjutsu
+Ninjutsu
+Casualty
+Casualty
+Disguise
+Disguise
+Disguise
+Collect evidence
+Collect evidence
+Suspect
+Suspect
+Disguise
+Cloak
+Collect evidence
+Suspect
+Cloak
+Toxic
+Corrupted
+Toxic
+For Mirrodin!
+Corrupted
+Corrupted
+Corrupted
+Strive
+Escalate
+Infect
+Infect
+Demonstrate
+Learn
+Learn
+Learn
+Assemble
+Augment
+Augment
+Assemble
+Assemble
+Augment
+Flanking
+Fading
+Phasing
+Echo
+Eternalize
+Raid
+Conjure
+Seek
+Conjure
+Seek
+Conjure
+Conjure
+Seek
+Embalm
+Hidden agenda
+Champion
+Chroma
+Modular
+Morph
+Embalm
+Cohort
+Clash
+Rally
+Megamorph
+Assist
+Bushido
+Epic
+Wither
+Offering
+Megamorph
+Surge
+Ingest
+Recover
+Morph
+Amplify
+Wither
+Assist
+Grandeur
+Sweep
+Sunburst
+Kinship
+Fortify
+Cleave
+Daybound
+Nightbound
+Disturb
+Soulshift
+Venture into the dungeon
+Specialize
+Specialize
+Specialize
+Rage Beyond Death
+Wild Shape
+Calim's Breath
+Psionic Adept
+Molting Exoskeleton
+Gift of Tiamat
+Aim for the Cursed Amulet
+Fire a Warning Shot
+Aim for the Wyvern
+Intensity
+Protection Fighting Style
+Natural Shelter
+Keen Sight
+Call for Aid
+Stall for Time
+Avoidance
+Ceremorphosis
+Confounding Clouds
+Homunculus Servant
+Sleight of Hand
+Animate Chains
+Devour Intellect
+Pack tactics
+Natural Recovery
+Feed
+Friends
+Gravestorm
+Wind Walk
+Lure the Unwary
+Psychic Defense
+Pray for Protection
+Strike a Deal
+Bigby's Hand
+Gust of Wind
+Death Ray
+Disintegration Ray
+Mold Harvest
+Psychic Blades
+Weird Insight
+Blood Drain
+Spiked Retribution
+Toxic Spores
+Scorching Ray
+Crown of Madness
+Enthralling Performance
+Vicious Mockery
+Mantle of Inspiration
+Bribe the Guards
+Threaten the Merchant
+Gathered Swarm
+Infesting Spores
+Mama's Coming
+Conjure Elemental
+Gather Your Courage
+Run and Hide
+Project Image
+Loud Ruckus
