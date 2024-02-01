@@ -3,19 +3,15 @@ Personal project.
 
 Note: You'll need Python. 
  
-1. Open a command prompt in the same dir as MTGView.py and Create virtual python env:
+1. Open a command prompt in the same directory as MTGView.py and Create virtual python env:
 
   > python -m venv venv
 
-2. Open powershell:
+2. Activate the environment
 
-  > powershell
+  > venv\Scripts\activate
 
-3. Activate the environment
-
-  > venv\Scripts\activate.ps1
-
-4. Install the prerequisites:
+3. Install the prerequisites:
 
   > pip install -r requirements.txt
 
